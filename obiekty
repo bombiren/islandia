@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Islandia</title>
+    <link rel="stylesheet" href="styl.css">
+</head>
+<body>
+
+<header>
+    <h1><a href="islandia.php">Zwiedzaj Islandię</a></h1>
+</header>
+
+<aside>
+    <h3>Do zwiedzania</h3>
+    <ul>
+        <li>Wodospady:
+            <ol>
+                <?php
+                
+                $polaczenie = mysqli_connect("localhost", "root", "", "islandia");
+                $zapytanie = mysqli_query($polaczenie, "SELECT nazwa FROM obiekty WHERE rodzaje_id = 10 AND kontynenty_id = 3;");
+                while ($wiersz = mysqli_fetch_assoc($zapytanie)) {
+                    echo "<li>" . $wiersz["nazwa"] . "</li>";
+                }
+                ?>
+            </ol>
+        </li>
+        <li>Siedliska zwierząt:
+            <ol>
+                <?php
+               
+                $zapytanie = mysqli_query($polaczenie, "SELECT nazwa FROM obiekty WHERE rodzaje_id = 14 AND kontynenty_id = 3;");
+                while ($wiersz = mysqli_fetch_assoc($zapytanie)) {
+                    echo "<li>" . $wiersz["nazwa"] . "</li>";
+                }
+                ?>
+            </ol>
+        </li>
+    </ul>
+</aside>
+
+<main>
+    <h2>Opis miejsca</h2>
+    <section>
+        <?php
+        
+        $id = $_GET["id"];
+        $zapytanie = mysqli_query($polaczenie, "SELECT obiekty.nazwa, obiekty.opis, obiekty.plik, obiekty.cecha, obiekty.wartosc, rodzaje.rodzaj FROM obiekty JOIN rodzaje ON obiekty.rodzaje_id = rodzaje.id WHERE obiekty.id = $id;");
+        $wiersz = mysqli_fetch_assoc($zapytanie);
+        echo "<img src='obrazki/" . $wiersz["plik"] . "' alt='" . $wiersz["nazwa"] . "'>";
+        echo "<h2>" . $wiersz["nazwa"] . "</h2>";
+        echo "<h3>" . $wiersz["rodzaj"] . "</h3>";
+        echo "<p>" . $wiersz["cecha"] . ": " . $wiersz["wartosc"] . "</p>";
+        echo "<p>" . $wiersz["opis"] . "</p>";
+        mysqli_close($polaczenie); // na końcu zamykamy połączenie z bazą
+        ?>
+    </section>
+</main>
+
+<footer>
+    <hr>
+    <p>Autor: 00000000000</p>
+</footer>
+
+</body>
+</html>
